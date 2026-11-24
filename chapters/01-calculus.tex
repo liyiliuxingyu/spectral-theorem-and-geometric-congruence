@@ -1,0 +1,93 @@
+\chapter{数学分析：从变化率读出主轴}
+\label{ch:calculus}
+
+同一个二次型，沿不同方向走，增长速度不同。分析的办法是限制方向、求导、找极值，再观察旋转究竟保留了哪些量。本章沿用导读中的 $A_0,Q_0,D_0$。
+
+\section{在单位圆上寻找特征方向}
+
+设单位向量 $e(\theta)=(\cos\theta,\sin\theta)^T$。把二次型限制在单位圆上，得到单变量函数 $r(\theta)=q_A(e(\theta))$。若 $A$ 对称，求导得 $r'(\theta)=2e'(\theta)^TAe(\theta)$。由于 $e,e'$ 是互相垂直的两个单位向量，$r'(\theta)=0$ 恰好说明 $Ae$ 沿 $e$ 方向，即 $e$ 是特征向量。
+
+\begin{example}{用三角恒等式找最大值和最小值}
+在 $x^2+y^2=1$ 上，求 $5x^2+4xy+2y^2$ 的最大值、最小值与相应方向。
+\end{example}
+\begin{solution}
+代入 $x=\cos\theta,\ y=\sin\theta$，再用倍角公式，得到
+\[
+r(\theta)=\frac72+\frac32\cos2\theta+2\sin2\theta
+         =\frac72+\frac52\cos(2\theta-\phi),
+\quad \cos\phi=\frac35,\quad\sin\phi=\frac45.
+\]
+故最大值为 $6$，最小值为 $1$。取 $\alpha=\arctan(1/2)$，则 $\cos2\alpha=3/5,\ \sin2\alpha=4/5$，可取 $\phi=2\alpha$。最大方向为 $\theta=\alpha$ 或 $\alpha+\pi$，对应 $\pm(2,1)^T/\sqrt5$；最小方向与它垂直，为 $\pm(-1,2)^T/\sqrt5$。在方向 $e$ 上，点 $te$ 满足 $q_A(te)=t^2q_A(e)$。当等值常数为 $1$ 时，端点到原点的距离是 $1/\sqrt{q_A(e)}$，所以增长最快的方向反而是短轴方向。
+\end{solution}
+
+\begin{example}{拉格朗日乘子为什么会变成特征值}
+在 $x^2+y^2+z^2=1$ 上求 $4x^2+4xy+4y^2+z^2$ 的极值，并解释乘子的意义。
+\end{example}
+\begin{solution}
+约束 $g(x,y,z)=x^2+y^2+z^2=1$ 上 $\nabla g=2(x,y,z)^T\ne0$。极值点上目标函数沿球面切方向的导数为零，所以 $\nabla f$ 与 $\nabla g$ 平行。写 $\nabla f=\lambda\nabla g$，约去 $2$ 后得
+\[
+(4-\lambda)x+2y=0,\quad 2x+(4-\lambda)y=0,\quad(1-\lambda)z=0.
+\]
+前两式相加、相减，得 $(6-\lambda)(x+y)=0$ 与 $(2-\lambda)(x-y)=0$。由单位长度知 $x+y,x-y,z$ 至少一个非零，故候选 $\lambda$ 为 $6,2,1$。分别取单位向量 $(1,1,0)/\sqrt2$、$(1,-1,0)/\sqrt2$、$(0,0,1)$ 都能达到。因为 $Ae=\lambda e$ 时 $e^TAe=\lambda\|e\|^2=\lambda$，乘子恰是相应函数值。球面紧致，极值必达到，故最大值为 $6$，最小值为 $1$。
+\end{solution}
+
+\section{二阶导数怎样辨认临界点}
+
+设二元函数 $f$ 在临界点 $a$ 的邻域二阶连续可微，则其二阶 Taylor 展开为
+\[
+f(a+h)=f(a)+\tfrac12h^THh+o(\|h\|^2),
+\qquad H=(\partial_i\partial_j f(a)).
+\]
+二阶偏导连续时，Hessian 矩阵 $H$ 对称。把它正交对角化，便能看清局部的增减方向。余项 $o(\|h\|^2)$ 除以 $\|h\|^2$ 后趋于零，因此在各特征值严格同号时，它不会改变充分靠近临界点的符号判断。
+
+\begin{example}{带有交叉项和三次项的严格极小值}
+判断 $f(x,y)=5x^2+4xy+2y^2+x^3$ 在原点的局部性质，并给出一个明确的邻域。
+\end{example}
+\begin{solution}
+原点是临界点，$H=2A_0$ 的特征值为 $12,2$。令 $(x,y)^T=Q_0(u,v)^T$，则二次部分为 $6u^2+v^2\ge u^2+v^2=x^2+y^2$。设 $r=\sqrt{x^2+y^2}$，有 $|x|^3\le r^3$，所以
+\[
+f(x,y)-f(0,0)\ge r^2-r^3=r^2(1-r)>0\qquad (0<r<1).
+\]
+这就直接证明了严格局部极小值。三次项一般会改变整条等值曲线，以上论证用的是二阶近似及余项控制，不能宣称 $f=1$ 与二次型椭圆全等。
+\end{solution}
+
+\begin{example}{同一个退化 Hessian 对应三种情况}
+比较 $f_+(x,y)=x^2+y^4$、$f_-(x,y)=x^2-y^4$ 和 $f_0(x,y)=x^2$ 在原点的性质。
+\end{example}
+\begin{solution}
+三个函数在原点的梯度都为零，Hessian 都是 $\operatorname{diag}(2,0)$，谱完全相同。$f_+$ 的两项非负，只有原点同时为零，故是严格极小；$f_-$ 在 $x$ 轴上为正、在 $y$ 轴上为负，故是鞍点；$f_0$ 在整条 $y$ 轴上为零，故是非严格极小。特征值 $0$ 对应的方向没有二阶信息，必须检查更高阶项或直接比较函数值。
+\end{solution}
+
+\section{旋转保留曲线的长度与弯曲程度}
+
+对分段一阶连续可微的参数曲线 $\gamma(t)$，切向量是 $\gamma'(t)$，弧长是速度的积分。对二次可微且速度不为零的平面曲线，曲率大小为
+\[
+\kappa(t)=\frac{|\det(\gamma'(t),\gamma''(t))|}{\|\gamma'(t)\|^3}.
+\]
+在正交变换下，速度范数不变，行列式只可能改变符号，故弧长与曲率大小都不变。
+
+\begin{example}{不必算出椭圆周长，也能比较周长}
+令 $\gamma(t)=(a\cos t,b\sin t)$，$a=1/\sqrt6,b=1$。证明标准椭圆与 $Q_0$ 旋转后的椭圆周长相等，并比较对应的四分之一段弧长。
+\end{example}
+\begin{solution}
+$\gamma'(t)=(-a\sin t,b\cos t)$，故
+\[
+\|\gamma'(t)\|=\sqrt{a^2\sin^2t+b^2\cos^2t}.
+\]
+旋转后的参数曲线是 $\eta(t)=Q_0\gamma(t)$，其导数为 $Q_0\gamma'(t)$，速度大小相同。于是任意参数区间 $[s,t]$ 上的弧长相等，特别是在 $[0,\pi/2]$ 上，从短轴端点到相邻长轴端点的弧长都等于
+\[
+\int_0^{\pi/2}\sqrt{\tfrac16\sin^2t+\cos^2t}\,dt.
+\]
+两条完整曲线都绕一周，积分区间 $[0,2\pi]$ 的弧长相同；无须把积分求成初等函数。
+\end{solution}
+
+\begin{example}{哪一个轴端点更弯}
+计算上述标准椭圆在 $(a,0)$ 和 $(0,b)$ 的曲率大小，再给出斜椭圆中对应点的曲率。
+\end{example}
+\begin{solution}
+有 $\gamma''(t)=(-a\cos t,-b\sin t)$，因此 $\det(\gamma',\gamma'')=ab$。所以
+\[
+\kappa(t)=\frac{ab}{(a^2\sin^2t+b^2\cos^2t)^{3/2}}.
+\]
+在 $t=0$ 处为 $a/b^2=1/\sqrt6$；在 $t=\pi/2$ 处为 $b/a^2=6$。长轴端点 $(0,1)$ 更弯。斜椭圆对应点依次为 $(2,1)/\sqrt{30}$ 和 $(-1,2)/\sqrt5$。因为 $\det Q_0=1$ 且速度不变，曲率仍为 $1/\sqrt6$ 和 $6$。若用镜面反射代替旋转，带符号曲率会反号，但曲率大小保持不变。
+\end{solution}
