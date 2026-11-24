@@ -1,2 +1,9 @@
-# spectral-theorem-and-geometric-congruence
-从全等变换到谱定理：七门数学的中文例题讲义、LaTeX 源码与 Lean 4 证明。
+# 从全等变换到谱定理
+
+一部从椭圆主轴讲起的中文数学讲义：对称矩阵给出正交特征基，而正交坐标变换保持每一对点的距离。全书通过数学分析、高等代数、近世代数、泛函分析、实分析、复分析与范畴论的 48 道例题说明这层关系。
+
+- [阅读完整讲义与例题解析（PDF）](谱定理与全等_逐节例题加强版.pdf)
+- [LaTeX 主文件](谱定理与全等.tex) · [分章源码](chapters/) · [Lean 证明与使用说明](lean/README.md)
+- [当前核验范围与下一道题](接续状态.md) · [接续说明](接续说明.md) · [工具链与字体](工具链记录.md)
+
+在仓库根目录运行 `python3 verify.py` 可校验文件及引用。安装 XeLaTeX、CTeX 及[排版依赖](编译说明.txt)后，用 `python3 build.py` 从源码重排 PDF。形式证明锁定 Lean 4.19.0；按 Lean 目录说明安装 Mathlib 后运行 `python3 lean/check.py`。纸本题解与已经过 Lean 验证的内容在接续状态中分别列出。

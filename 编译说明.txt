@@ -1,0 +1,19 @@
+《从全等变换到谱定理：七门数学的例题讲义》
+
+源码入口：谱定理与全等.tex（UTF-8 / ctexbook / A4）
+验证入口：python3 verify.py
+构建入口：python3 build.py
+Windows 可用 py -3 verify.py 和 py -3 build.py。Python 3.8 或更高版本，无额外 Python 包。
+
+安装 TeX Live 或等价的 TeX 发行版，确保命令行能找到 xelatex。
+需要 CTeX、xeCJK、zhnumber、AMS 数学宏包、graphicx、booktabs、needspace、TikZ/PGF、hyperref。
+Linux 下 CTeX 的默认中文字体为 Fandol，由 TeX 发行版提供。
+其他系统可能使用 CTeX 的其他默认字体集，字形或分页可能略有差异。
+西文与数学使用 TeX 的默认字体。图形在主文件中由 TikZ 生成，无外置图像。
+
+build.py 连续编译三遍，写到 build/谱定理与全等.pdf，随包 PDF 不受影响。
+如需指定引擎，使用 python3 build.py --xelatex /path/to/xelatex。
+也可在根目录直接运行 xelatex -interaction=nonstopmode -halt-on-error 谱定理与全等.tex，重复到引用稳定。
+pdfinfo、pdftotext、pdffonts（Poppler）用于附加检查，不是构建依赖。
+
+随包 PDF 是先前交付的 43 页原件。默认双面排版中，章节从右页开始而出现的留白属于正常分页。

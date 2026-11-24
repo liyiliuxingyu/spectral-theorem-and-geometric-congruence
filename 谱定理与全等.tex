@@ -1,0 +1,139 @@
+\documentclass[UTF8,a4paper]{ctexbook}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx,booktabs,needspace,tikz}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={从全等变换到谱定理：七门数学的例题讲义},bookmarksnumbered=true}
+\setcounter{tocdepth}{1}
+
+\newcounter{example}[chapter]
+\renewcommand{\theexample}{\thechapter.\arabic{example}}
+\newenvironment{example}[1]{%
+  \par\Needspace{5\baselineskip}\medskip
+  \refstepcounter{example}\noindent\textbf{例 \theexample\quad #1}\par\nobreak
+  \noindent\ignorespaces}{\par}
+\newenvironment{solution}{%
+  \par\smallskip\noindent\textbf{解析：}\ignorespaces}{\par\medskip}
+\newtheorem{theorem}{定理}[chapter]
+
+\title{从全等变换到谱定理\\[.6em]\Large 七门数学的例题讲义}
+\author{}
+\date{}
+
+\begin{document}
+\frontmatter
+\maketitle
+\tableofcontents
+\chapter{导读：一个矩阵，两件事}
+
+这本书从平面上的两条椭圆出发，依次用数学分析、高等代数、近世代数、泛函分析、实分析、复分析、范畴论理解谱定理。导读和高等代数的基础例题从坐标与向量出发；数学分析章会用到基本微积分，后续各章先介绍做题所需的概念，再进入抽象推导。每道例题都给出解析。第一次阅读，可以先看本导读和高等代数章，再按兴趣回到其他各章。七章各有六道例题，另有两道导读题和四道综合题，共四十八道。
+
+\section{先认清要证明哪两个图形全等}
+
+给定实对称矩阵 $A$，记 $q_A(x)=x^TAx$。若一个正交矩阵 $Q$ 满足
+\[
+Q^TAQ=D=\operatorname{diag}(\lambda_1,\ldots,\lambda_n),\qquad Q^TQ=I,
+\]
+则 $x=Qu$ 同时给出两条等式：
+\begin{align*}
+q_A(Qu)&=u^TQ^TAQu=u^TDu,\\
+\|Qu-Qv\|^2&=(u-v)^TQ^TQ(u-v)=\|u-v\|^2.
+\end{align*}
+第一条等式给出等值集的对应：$u^TDu=c$ 当且仅当 $q_A(Qu)=c$。第二条等式说明任意两点的距离在对应中不变。由于 $Q^{-1}=Q^T$，对应是双射，故两个等值图形全等。这一结论也适用于不等式 $q_A(x)\le c$ 所定义的点集。
+
+实对称矩阵的谱定理保证这样的 $Q$ 存在。这里，$A$ 决定二次型，$Q$ 才负责搬动图形。若把两种坐标都画在同一个固定坐标系里，$Q$ 表示主动移动；若只把坐标轴换成 $Q$ 的列，几何点没有移动，改变的是同一点的坐标。
+
+\begin{example}{主例：把标准椭圆转成斜椭圆}
+令
+\[
+A_0=\begin{pmatrix}5&2\\2&2\end{pmatrix},\qquad
+Q_0=\frac1{\sqrt5}\begin{pmatrix}2&-1\\1&2\end{pmatrix},\qquad
+D_0=\begin{pmatrix}6&0\\0&1\end{pmatrix}.
+\]
+验证 $Q_0$ 给出 $6u^2+v^2=1$ 与 $5x^2+4xy+2y^2=1$ 的全等对应，并找出对应的一对长轴端点。
+\end{example}
+\begin{solution}
+$Q_0$ 的两列长度都是 $1$，内积是 $(-2+2)/5=0$，故 $Q_0^TQ_0=I$。分别用 $A_0$ 乘两列，得到原列的 $6$ 倍和 $1$ 倍，因此 $A_0Q_0=Q_0D_0$。于是 $Q_0^TA_0Q_0=D_0$。取
+\[
+x=\frac{2u-v}{\sqrt5},\qquad y=\frac{u+2v}{\sqrt5}.
+\]
+这就是两椭圆之间的保距双射。长轴端点 $(0,\pm1)$ 映到 $\pm(-1,2)/\sqrt5$，变换前后的端点距离都是 $2$。短轴端点 $(\pm1/\sqrt6,0)$ 映到 $\pm(2,1)/\sqrt{30}$，短轴长度均为 $2/\sqrt6$。而 $\det Q_0=1$，所以这里的保距变换是旋转，转角为 $\arctan(1/2)$。
+\end{solution}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=1.55cm,y=1.55cm,>=stealth]
+\begin{scope}
+\draw[->] (-1.22,0)--(1.3,0) node[right] {$u$};
+\draw[->] (0,-1.2)--(0,1.22) node[above] {$v$};
+\draw[thick,domain=0:360,samples=101,smooth,variable=\t]
+  plot ({cos(\t)/sqrt(6)},{sin(\t)});
+\draw[dashed] (0,1)--({1/sqrt(6)},0)--(0,-1)--cycle;
+\fill (0,1) circle (1.1pt) node[above right] {$R$};
+\fill (0,-1) circle (1.1pt) node[below right] {$S$};
+\fill ({1/sqrt(6)},0) circle (1.1pt) node[above right] {$P$};
+\node at (0,-1.46) {$6u^2+v^2=1$};
+\end{scope}
+\draw[->] (1.7,0.5)--(2.55,0.5) node[midway,above] {$Q_0$};
+\begin{scope}[xshift=6.5cm]
+\draw[->] (-1.22,0)--(1.3,0) node[right] {$x$};
+\draw[->] (0,-1.2)--(0,1.22) node[above] {$y$};
+\draw[thick,domain=0:360,samples=101,smooth,variable=\t]
+  plot ({(2*cos(\t)/sqrt(6)-sin(\t))/sqrt(5)},
+        {(cos(\t)/sqrt(6)+2*sin(\t))/sqrt(5)});
+\coordinate (rp) at ({-1/sqrt(5)},{2/sqrt(5)});
+\coordinate (sp) at ({1/sqrt(5)},{-2/sqrt(5)});
+\coordinate (pp) at ({2/sqrt(30)},{1/sqrt(30)});
+\draw[dashed] (rp)--(pp)--(sp)--cycle;
+\fill (rp) circle (1.1pt) node[above left] {$R'$};
+\fill (sp) circle (1.1pt) node[below right] {$S'$};
+\fill (pp) circle (1.1pt) node[above right] {$P'$};
+\node at (0,-1.46) {$5x^2+4xy+2y^2=1$};
+\end{scope}
+\end{tikzpicture}
+\caption{两图比例相同。椭圆和内接三角形由同一个正交矩阵逐点对应。}
+\end{figure}
+
+\section{什么条件不能省}
+
+\begin{example}{把椭圆拉成圆，为什么不能说全等}
+令 $s=\sqrt6\,u,\ t=v$，则 $6u^2+v^2=1$ 变成 $s^2+t^2=1$。说明这个代换为什么不能用于证明全等。
+\end{example}
+\begin{solution}
+这个代换把短轴端点间的距离 $2/\sqrt6$ 拉长到 $2$。它的矩阵为 $P=\operatorname{diag}(\sqrt6,1)$，而
+\[
+P^TP=\operatorname{diag}(6,1)\ne I.
+\]
+如果有其他平面等距变换把圆送到椭圆，圆心的像必到椭圆上的每个点等距。椭圆的两对对称端点迫使这样的候选点只能是原点，但原点到长轴端点与短轴端点的距离分别为 $1$ 与 $1/\sqrt6$。所以圆和此椭圆不全等。一般可逆代换可以化简方程，几何全等要求保距。
+\end{solution}
+
+\section{符号与阅读路线}
+
+$\langle x,y\rangle$ 表示内积，$\|x\|$ 表示范数；有限维实空间中转置用 $T$，复空间共轭转置用 $*$。符号 $\sigma(T)$ 在无限维章节表示算子的谱：使 $\lambda I-T$ 没有有界逆的所有复数 $\lambda$。它可能包含并非特征值的点。
+
+\begin{center}
+\begin{tabular}{lp{.62\textwidth}}
+\toprule
+视角 & 要回答的问题\\
+\midrule
+数学分析 & 哪个方向最陡？旋转前后的曲线长度和曲率怎样比较？\\
+高等代数 & 如何找正交特征基？特征值能判定哪一类全等？\\
+近世代数 & 群作用如何把矩阵分成轨道？哪些变换不改变它？\\
+泛函分析 & 无穷维里何时还有正交特征基？如何逐项计算？\\
+实分析 & 旋转怎样改变积分？保测与保距有什么区别？\\
+复分析 & 旋转、共形和全纯有什么关系？围道积分能读出哪些谱信息？\\
+范畴论 & 换坐标以后，哪些构造与同构相容？\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\mainmatter
+\input{chapters/01-calculus}
+\input{chapters/02-linear}
+\input{chapters/03-abstract}
+\input{chapters/04-functional}
+\input{chapters/05-real}
+\input{chapters/06-complex}
+\input{chapters/07-category}
+\appendix
+\input{chapters/08-synthesis}
+\end{document}
