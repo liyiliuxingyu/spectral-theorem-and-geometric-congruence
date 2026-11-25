@@ -19,7 +19,7 @@ REQUIRED = {MAIN, PDF, "接续说明.md", "接续状态.md", "工具链记录.md
             "lean/lean-toolchain", "lean/lakefile.toml", "lean/lake-manifest.json",
             "lean/MatrixCertificate.lean", "lean/EllipseCongruence.lean",
             "lean/check.py"}
-REQUIRED.update({"lean/" + name + ".lean" for name in ('RotationAngle', 'OrthogonalCoordinates', 'SpectralTheorem', 'SpectralCongruence', 'Example21', 'Example22', 'Example23', 'Example24')})
+REQUIRED.update({"lean/" + name + ".lean" for name in ('RotationAngle', 'OrthogonalCoordinates', 'SpectralTheorem', 'SpectralCongruence', 'Example21', 'Example22', 'Example23', 'Example24', 'Example25', 'EllipseCenter', 'EllipseForward', 'ChordLandmarks', 'EllipseClassification')})
 REFS = re.compile(r"\\(input|include|includegraphics)\*?\s*(?:\[[^]]*\]\s*)?\{([^{}]+)\}")
 
 
