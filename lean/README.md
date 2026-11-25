@@ -4,7 +4,7 @@
 
 ```sh
 lean --version
-lake exe cache get Mathlib.LinearAlgebra.Matrix.Spectrum Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan Mathlib.Data.Real.Sqrt Mathlib.Algebra.BigOperators.Ring.Finset Mathlib.Tactic.Ring Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith
+lake exe cache get Mathlib.LinearAlgebra.Matrix.Spectrum Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan Mathlib.Data.Real.Sqrt Mathlib.Algebra.BigOperators.Ring.Finset Mathlib.Tactic.Ring Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith Mathlib.Tactic.FinCases Mathlib.Tactic.FieldSimp Mathlib.LinearAlgebra.Matrix.Charpoly.Basic Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
 python3 check.py
 ```
 
@@ -27,5 +27,10 @@ LEAN_PATH=/path/to/matching/objects python3 check.py --lean /path/to/lean
 | 例 2.2：双曲线 | [负特征值的实例](Example22.lean)核验 $4xy=2u^2-2v^2$ 的换元、全部等值集保距双射、顶点的极小性质与坐标以及渐近线。此文件复用导读的平面欧氏距离定义。 |
 | 例 2.3：旋转椭球 | [特征平面与三个半轴](Example23.lean)核验特征空间、标准正交基、正反换元、截面与半轴长度。 |
 | 例 2.4：谱投影 | [从矩阵到正交分量](Example24.lean)核验两个投影的关系、向量分解以及两次作用的结果。 |
+
+| 例 2.5：正定单位椭圆的全等判据 | [从单位曲线恢复系数](Example25.lean)、[消去平移](EllipseCenter.lean)、[从同谱构造等距](EllipseForward.lean)、[双向判据与全平面保距双射](EllipseClassification.lean)。 |
+| 例 2.5 的三点定位补充 | [三个标志点](ChordLandmarks.lean)证明：到三个不共线点的弦长唯一确定一点；保距映射在三个这样的像点吻合，则在整个定义域吻合。 |
+
+只复验例 2.5 的双向判据及其本地依赖，可进入本目录执行 `python3 check.py --module EllipseClassification`。三点定位补充可用 `python3 check.py --module ChordLandmarks` 单查。省略 `--module` 会运行全部模块。
 
 精确到目标的通过范围与未验证项见[接续状态](../接续状态.md)。Mathlib 定理的应用不是对讲义所用「球面取最大值、按维数归纳」证明的逐行翻译。

@@ -114,11 +114,76 @@ TARGETS = {
         "SpectralExample.Example24.A_squared_e": STANDARD_AXIOMS,
         "SpectralExample.Example24.A_applied_twice_e": STANDARD_AXIOMS,
     },
+    "Example25.lean": {
+        "SpectralExample.Example25.orthogonal_inverse_left": STANDARD_AXIOMS,
+        "SpectralExample.Example25.orthogonal_inverse_right": STANDARD_AXIOMS,
+        "SpectralExample.Example25.orthogonal_surjective": STANDARD_AXIOMS,
+        "SpectralExample.Example25.orthogonal_preserves_distanceSquared": STANDARD_AXIOMS,
+        "SpectralExample.Example25.orthogonal_preserves_distance": STANDARD_AXIOMS,
+        "SpectralExample.Example25.unit_level_determines_form": STANDARD_AXIOMS,
+        "SpectralExample.Example25.polarization_coefficients": STANDARD_AXIOMS,
+        "SpectralExample.Example25.qForm_congruence": STANDARD_AXIOMS,
+        "SpectralExample.Example25.level_implies_congruence": STANDARD_AXIOMS,
+        "SpectralExample.Example25.trace_congruence": STANDARD_AXIOMS,
+        "SpectralExample.Example25.orthogonal_det_sq": STANDARD_AXIOMS,
+        "SpectralExample.Example25.determinant_congruence": STANDARD_AXIOMS,
+        "SpectralExample.Example25.symMatrix_symmetric": STANDARD_AXIOMS,
+        "SpectralExample.Example25.symMatrix_charpoly": STANDARD_AXIOMS,
+        "SpectralExample.Example25.unit_level_implies_charpoly": STANDARD_AXIOMS,
+        "SpectralExample.Example25.matMatrix_orthogonal": STANDARD_AXIOMS,
+        "SpectralExample.Example25.symMatrix_congruence": STANDARD_AXIOMS,
+    },
+    "EllipseCenter.lean": {
+        "SpectralExample.EllipseCenter.surjective_affine_unit_level_forces_zero_offset": STANDARD_AXIOMS,
+        "SpectralExample.EllipseCenter.affine_unit_level_forces_zero_offset": STANDARD_AXIOMS,
+        "SpectralExample.EllipseCenter.affine_unit_level_determines_form": STANDARD_AXIOMS,
+        "SpectralExample.EllipseCenter.affine_unit_level_implies_charpoly": STANDARD_AXIOMS,
+    },
+    "EllipseForward.lean": {
+        "SpectralExample.EllipseForward.charpoly_eq_eigenvalues_match": STANDARD_AXIOMS,
+        "SpectralExample.EllipseForward.charpoly_eq_implies_orthogonal_similarity": STANDARD_AXIOMS,
+        "SpectralExample.EllipseForward.charpoly_eq_implies_level_isometry": STANDARD_AXIOMS,
+    },
+    "ChordLandmarks.lean": {
+        "SpectralBook.ChordLandmarks.determined_by_three": STANDARD_AXIOMS,
+        "SpectralBook.ChordLandmarks.maps_agree_of_three": STANDARD_AXIOMS,
+    },
+    "EllipseClassification.lean": {
+        "SpectralExample.EllipseClassification.rigidCongruent_of_sameSpectrum": STANDARD_AXIOMS,
+        "SpectralExample.EllipseClassification.sameSpectrum_of_rigidCongruent": STANDARD_AXIOMS,
+        "SpectralExample.EllipseClassification.rigidCongruent_iff_sameSpectrum": STANDARD_AXIOMS,
+        "SpectralExample.EllipseClassification.move_preserves_distance": STANDARD_AXIOMS,
+        "SpectralExample.EllipseClassification.move_bijective": STANDARD_AXIOMS,
+    },
 }
 AUDIT = re.compile(
     r"^'([^']+)' (?:depends on axioms: \[([^\]]*)\]|does not depend on any axioms)\s*$",
     re.MULTILINE,
 )
+
+
+def proof_order(roots):
+    """Return registered local imports before their users; Mathlib is preinstalled."""
+    seen, active, order = set(), set(), []
+    def visit(name):
+        if name in active:
+            raise ValueError(f"Local Lean import cycle at {name}")
+        if name in seen:
+            return
+        active.add(name)
+        source = (ROOT / name).read_text(encoding="utf-8")
+        for line in source.splitlines():
+            if line.startswith("import "):
+                for mod in line.partition("--")[0].split()[1:]:
+                    path = mod.replace(".", "/") + ".lean"
+                    if path in TARGETS:
+                        visit(path)
+        active.remove(name)
+        seen.add(name)
+        order.append(name)
+    for name in roots:
+        visit(name)
+    return order
 
 
 def main():
@@ -129,6 +194,9 @@ def main():
                       help="Check only the finite-sum proof for a given orthogonal matrix")
     part.add_argument("--certificate-only", action="store_true",
                         help="Check only the integer matrix certificate, without Mathlib")
+    modules = {Path(name).stem: name for name in TARGETS}
+    part.add_argument("--module", choices=sorted(modules), metavar="NAME",
+                      help="Rebuild one registered module and its local imports; omit .lean")
     args = parser.parse_args()
     if not (args.lean or args.certificate_only):
         # Resolve the locked environment once, then give fresh project objects
@@ -136,7 +204,8 @@ def main():
         try:
             return subprocess.run(
                 ["lake", "env", sys.executable, str(Path(__file__).resolve()), "--lean", "lean"]
-                + (["--coordinates-only"] if args.coordinates_only else []),
+                + (["--coordinates-only"] if args.coordinates_only else [])
+                + (["--module", args.module] if args.module else []),
                 cwd=ROOT).returncode
         except OSError as err:
             print(err, file=sys.stderr)
@@ -146,8 +215,10 @@ def main():
         compiler = str(Path(compiler).resolve())
     cmd = [compiler]
     targets = (["MatrixCertificate.lean"] if args.certificate_only else
-               ["OrthogonalCoordinates.lean"] if args.coordinates_only else list(TARGETS))
+               ["OrthogonalCoordinates.lean"] if args.coordinates_only else
+               [modules[args.module]] if args.module else list(TARGETS))
     try:
+        targets = proof_order(targets)
         ver = subprocess.run(cmd + ["--version"], cwd=ROOT, text=True,
                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=True)
         print(ver.stdout.strip(), flush=True)
@@ -162,7 +233,7 @@ def main():
                                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 print(proc.stdout, end="", flush=True)
                 if proc.returncode or "sorryAx" in proc.stdout or re.search(r": (?:warning|error):", proc.stdout):
-                    raise ValueError(f"Lean check failed for {filename}.")
+                    raise ValueError(f"Lean check failed for {filename} (exit {proc.returncode}).")
                 audited = {name: {x.strip() for x in axioms.split(",") if x.strip()}
                            for name, axioms in AUDIT.findall(proc.stdout)}
                 for name, allowed in TARGETS[filename].items():
