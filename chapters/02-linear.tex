@@ -106,7 +106,61 @@ $\det(\lambda I-A)=\det\bigl(U^{-1}(\lambda I-B)U\bigr)=\det(\lambda I-B)$，特
 比较 $C=I_2$ 和 $J=\begin{pmatrix}1&1\\0&1\end{pmatrix}$。它们是否同谱、相似？对应的实二次型单位等值集是否全等？
 \end{example}
 \begin{solution}
-两者的特征多项式都是 $(\lambda-1)^2$，但 $J-I$ 的核只有一维，$C-I$ 的核是二维。相似保持核的维数，因此它们不相似，当然也不正交相似。另一个直接理由是任意可逆 $S$ 都有 $S^{-1}IS=I$。
+这道题有两个问题：先比较矩阵表示的线性变换，再比较二次型画出的图形。二者需要分别计算。
 
-对实向量 $x$，$x^TJx=x^T\bigl((J+J^T)/2\bigr)x$，因为反对称部分在两侧乘同一向量时为零。$J$ 的对称部分为 $\begin{pmatrix}1&1/2\\1/2&1\end{pmatrix}$，特征值是 $3/2,1/2$。它的单位等值椭圆半轴长为 $\sqrt{2/3}$ 和 $\sqrt2$；$C$ 的单位等值集是半径 $1$ 的圆。由上一题可知不全等。对称性不能省；一般实矩阵的二次型由对称部分决定。
+\textbf{第一步：同谱，却不相似。}两矩阵的特征多项式都是 $(\lambda-1)^2$，所以特征值 $1$ 都出现两次。但
+\[
+(C-I)\binom{x}{y}=\binom00,\qquad
+(J-I)\binom{x}{y}=\binom y0.
+\]
+因此 $C-I$ 的核是整个平面，维数为 $2$；$J-I$ 的核是 $y=0$ 的直线，维数为 $1$。也就是说，$C$ 的每个非零方向都是特征方向，$J$ 只有横轴方向。
+若 $J=S^{-1}CS$，则 $S$ 会把 $J-I$ 的核一一对应到 $C-I$ 的核，两个核的维数应相同，矛盾。也可以直接看出：任意可逆 $S$ 都满足 $S^{-1}I_2S=I_2\ne J$。故它们不相似，也不正交相似。
+
+\textbf{第二步：二次型只取矩阵的对称部分。}令 $z=(x,y)^T$，直接乘得
+\[
+z^TCz=x^2+y^2,\qquad z^TJz=x^2+xy+y^2.
+\]
+把 $J$ 写成 $J=H+K$，其中
+\[
+H=\frac{J+J^T}{2}=\begin{pmatrix}1&1/2\\1/2&1\end{pmatrix},\qquad
+K=\frac{J-J^T}{2}=\begin{pmatrix}0&1/2\\-1/2&0\end{pmatrix}.
+\]
+因为 $z^TKz=xy/2-yx/2=0$，所以 $z^TJz=z^THz$。一般实矩阵也有同样的分解：反对称部分 $K^T=-K$ 满足 $z^TKz=-(z^TKz)$，故其二次型恒为零。研究图形时，应对实对称矩阵 $H$ 使用谱定理。
+
+\textbf{第三步：算出椭圆的半轴和方向。}有
+\[
+\det(H-\lambda I)=(1-\lambda)^2-\frac14
+=\left(\lambda-\frac32\right)\left(\lambda-\frac12\right).
+\]
+对应 $3/2$ 的单位特征向量可取 $(1,1)^T/\sqrt2$，对应 $1/2$ 的可取 $(-1,1)^T/\sqrt2$。两者互相垂直，因此可作正交换元
+\[
+x=\frac{u-v}{\sqrt2},\qquad y=\frac{u+v}{\sqrt2}.
+\]
+此时 $x^2+xy+y^2=\frac32u^2+\frac12v^2$，单位等值集写成
+\[
+\frac{u^2}{2/3}+\frac{v^2}{2}=1.
+\]
+短半轴长为 $\sqrt{2/3}$，方向为 $(1,1)$；长半轴长为 $\sqrt2$，方向为 $(-1,1)$。长轴端点 $(u,v)=(0,\pm\sqrt2)$ 对应原坐标中的 $\pm(-1,1)$；下图记 $P=(1,-1)$。
+
+\textbf{第四步：用一对点的距离排除全等。}上述两个长轴端点的距离平方是 $(1-(-1))^2+(-1-1)^2=8$，故距离为 $2\sqrt2$。而 $C$ 的单位等值集是半径 $1$ 的圆，圆上任意两点的距离至多是直径 $2$。若存在两图形之间的全等对应，这对端点的像也必须相距 $2\sqrt2>2$，不可能。因此两图形不全等。
+
+本例中，$C,J$ 本身的特征值均为 $1,1$；决定第二个图形半轴的却是 $H$ 的特征值 $3/2,1/2$。实对称矩阵的假设保证这两层信息一致，不能从一般矩阵同谱直接推出其二次型图形全等。
+\begin{center}
+\begin{tikzpicture}[x=.9cm,y=.9cm,>=stealth]
+\draw[->,gray] (-1.5,0)--(1.5,0) node[right] {$x$};
+\draw[->,gray] (0,-1.45)--(0,1.45) node[above] {$y$};
+\draw[dashed,domain=0:360,samples=121,smooth,variable=\t]
+  plot ({cos(\t)},{sin(\t)});
+\draw[thick,domain=0:360,samples=121,smooth,variable=\t]
+  plot ({cos(\t)+sin(\t)/sqrt(3)},{-cos(\t)+sin(\t)/sqrt(3)});
+\draw[gray,thin] (-1,1)--(1,-1);
+\fill (1,-1) circle (1.1pt) node[below right] {$P$};
+\fill (-1,1) circle (1.1pt) node[above left] {$-P$};
+\draw[thick] (2.3,.65)--(2.8,.65);
+\node[right] at (2.8,.65) {椭圆，长轴 $2\sqrt2$};
+\draw[dashed] (2.3,-.15)--(2.8,-.15);
+\node[right] at (2.8,-.15) {单位圆，直径 $2$};
+\end{tikzpicture}
+\end{center}
 \end{solution}
+

@@ -22,15 +22,59 @@
 先关于横轴反射，再关于与横轴成 \(30^\circ\) 的直线反射。求合成变换，并求 \((2,0)^T\) 的像。若交换反射次序，结果怎样？
 \end{example}
 \begin{solution}
-关于与横轴夹角为 \(\beta\) 的直线反射，可先转过 \(-\beta\)，再关于横轴反射，最后转回 \(\beta\)，所以矩阵为 \(F_\beta=R_\beta S R_{-\beta}\)。直接乘矩阵得到 \(SR_\alpha S=R_{-\alpha}\)，于是
+先约定角度的正方向：\(\beta\) 从正横轴逆时针量起，表示\textbf{反射直线的方向角}，不是点被旋转的角。直线没有指定朝向，所以 \(\beta\) 与 \(\beta+180^\circ\) 表示同一条反射线；反射矩阵也应相同。以下固定坐标轴、主动移动点，并使用列向量。\textbf{矩阵乘积中，右边的变换先做。}
+
+\textbf{第一步：写出关于斜线的反射。}先把点旋转 \(-\beta\)，使反射直线转到横轴；关于横轴反射；最后旋转 \(\beta\) 回到原来的位置。因此
 \[
- F_\beta S=R_\beta(SR_{-\beta}S)=R_\beta R_\beta=R_{2\beta}.
+ F_\beta=R_\beta S R_{-\beta}
+ =\begin{pmatrix}
+ \cos 2\beta&\sin 2\beta\\
+ \sin 2\beta&-\cos 2\beta
+ \end{pmatrix}.
 \]
-取 \(\beta=30^\circ\)，合成变换是逆时针旋转 \(60^\circ\)，故
+矩阵中的 \(2\beta\) 并不表示 \(F_\beta\) 是旋转：它的行列式为 \(-1\)，而且整条反射直线上的点都不动。若一个非零向量原方向角为 \(\varphi\)，反射后方向角为 \(2\beta-\varphi\)。
+
+\textbf{第二步：按题目次序复合。}横轴反射把方向角 \(\varphi\) 变为 \(-\varphi\)，再作斜线反射得到 \(2\beta+\varphi\)，所以每个方向都统一增加 \(2\beta\)。矩阵计算也给出
 \[
- (2,0)^T\longmapsto (2\cos60^\circ,2\sin60^\circ)^T=(1,\sqrt3)^T.
+ F_\beta S
+ =\begin{pmatrix}
+ \cos 2\beta&-\sin 2\beta\\
+ \sin 2\beta&\cos 2\beta
+ \end{pmatrix}
+ =R_{2\beta}.
 \]
-反过来的乘积为 \(SF_\beta=(F_\beta S)^{-1}=R_{-2\beta}\)，同一点变成 \((1,-\sqrt3)^T\)。两次变换都保距，但结果不同，说明 \(O(2)\) 的乘法一般不能交换次序。
+交换次序则为
+\[
+ SF_\beta
+ =\begin{pmatrix}
+ \cos 2\beta&\sin 2\beta\\
+ -\sin 2\beta&\cos 2\beta
+ \end{pmatrix}
+ =R_{-2\beta}.
+\]
+这两个合成变换互为逆变换。因为每次反射都做两遍就回到变换前的位置，即 \(S^2=F_\beta^2=I\)，所以撤销 \(F_\beta S\) 必须按相反次序做 \(SF_\beta\)。
+
+\textbf{第三步：代入 \(\beta=30^\circ\)。}此时
+\[
+ F_{30^\circ}=\frac12\begin{pmatrix}1&\sqrt3\\\sqrt3&-1\end{pmatrix},
+ \quad F_{30^\circ}S=R_{60^\circ},
+ \quad SF_{30^\circ}=R_{-60^\circ}.
+\]
+对题目中的具体点，两种次序的每一步分别为
+\begin{align*}
+ (2,0)^T&\xrightarrow{\ S\ }(2,0)^T
+          \xrightarrow{\ F_{30^\circ}\ }(1,\sqrt3)^T,\\
+ (2,0)^T&\xrightarrow{\ F_{30^\circ}\ }(1,\sqrt3)^T
+          \xrightarrow{\ S\ }(1,-\sqrt3)^T.
+\end{align*}
+两像的长度都是 \(\sqrt{1+3}=2\)，但点的位置不同。反向合成把正向的像还原：\(R_{-60^\circ}(1,\sqrt3)^T=(2,0)^T\)。
+
+\textbf{第四步：核对保距。}直接相乘可得 \(F_\beta^TF_\beta=I\) 及 \(R_\theta^TR_\theta=I\)。所以对任意两点 \(p,q\)，各次反射及两个合成变换 \(T\) 都满足
+\[
+ \|T(p)-T(q)\|^2
+ =(p-q)^TT^TT(p-q)=\|p-q\|^2.
+\]
+这是对所有点对成立的保距证明；具体点的长度检查只是其中一个例子。两次反射的合成虽保距，交换次序却通常改变结果。本题的 \(60^\circ\) 与 \(-60^\circ\) 旋转正好展示了这个区别。
 \end{solution}
 
 \section{轨道描述所有摆法，稳定子描述对称}
