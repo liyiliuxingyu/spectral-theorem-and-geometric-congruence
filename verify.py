@@ -19,7 +19,7 @@ REQUIRED = {MAIN, PDF, "接续说明.md", "接续状态.md", "工具链记录.md
             "lean/lean-toolchain", "lean/lakefile.toml", "lean/lake-manifest.json",
             "lean/MatrixCertificate.lean", "lean/EllipseCongruence.lean",
             "lean/check.py"}
-REQUIRED.update({"lean/" + name + ".lean" for name in ('RotationAngle', 'OrthogonalCoordinates', 'SpectralTheorem', 'SpectralCongruence', 'Example21', 'Example22')})
+REQUIRED.update({"lean/" + name + ".lean" for name in ('RotationAngle', 'OrthogonalCoordinates', 'SpectralTheorem', 'SpectralCongruence', 'Example21', 'Example22', 'Example23', 'Example24')})
 REFS = re.compile(r"\\(input|include|includegraphics)\*?\s*(?:\[[^]]*\]\s*)?\{([^{}]+)\}")
 
 
@@ -173,7 +173,7 @@ def repack(root, output, additions):
     files = from_folder(root)
     for name in additions:
         rel = safe(name)
-        if any(part.startswith(".") or part in {"build", "__pycache__"} for part in rel.parts):
+        if name != ".gitignore" and any(part.startswith(".") or part in {"build", "__pycache__"} for part in rel.parts):
             raise ValueError(f"新资源不能指向缓存或隐藏目录：{name}")
         if name == MANIFEST or rel.suffix.lower() in {".zip", ".olean", ".ilean", ".pyc"}:
             raise ValueError(f"不能作为工程资源加入：{name}")

@@ -11,9 +11,43 @@ Linux 下 CTeX 的默认中文字体为 Fandol，由 TeX 发行版提供。
 其他系统可能使用 CTeX 的其他默认字体集，字形或分页可能略有差异。
 西文与数学使用 TeX 的默认字体。图形在主文件中由 TikZ 生成，无外置图像。
 
+离线查看与离线重编
+
+随包 PDF 已嵌入本版使用的字体，下载到本机后可用 PDF 阅读器离线查看，无需另装 TeX 或字体。
+离线重编需要事先在目标机器准备好 Python、XeLaTeX、上述全部宏包及其依赖、完整 Fandol 字体集，以及 Latin Modern、Computer Modern 等西文和数学字体；准备完成后可离线运行 build.py。
+本工程不附带 TeX 安装包、宏包仓库或完整字体文件，不能仅凭源码包在空白机器上完成纯离线安装。PDF 内嵌的是阅读用字体子集，不替代重编需要的原字体文件。
+主文档保持标准 ctexbook 默认字体选择。本版在 Linux 上使用 Fandol；其他平台或不同发行版的默认字体、宏包版本可能影响字形和分页，以下记录不保证跨系统得到完全相同的 PDF。
+
+本版中文字体来源与核对
+
+本版使用 Fandol 0.3（原包 README 的版本记录为 2015-07-18）。
+CTAN 原包下载地址：https://mirrors.ctan.org/fonts/fandol.zip
+下载地址会转到 CTAN 镜像；保留相应版本的原包，可供事先准备离线环境。应安装完整字体集，不能只安装下列三个实际用于本版 PDF 的字体。
+
+以下 SHA-256 对应本次编译使用的未修改原字体文件，已从本地文件逐一计算；它们不是 PDF 内嵌字体子集的散列。
+
+FandolSong-Regular.otf
+a3820003227d4abe31fe28b493200d94a849ccfd078b50a019264f70353020b0
+
+FandolSong-Bold.otf
+ffa76a70e128947a4dd22151d5ee829b23e24ce3cb6fe8ad49891cd1c2d9e9b9
+
+FandolKai-Regular.otf
+ea7e7fb4f9b3ac694a68d43946e04d21deed6e8c29a7c2d3081e1a4138f2f827
+
+在与 xelatex 相同的 TeX 环境中运行：
+kpsewhich ctexbook.cls
+kpsewhich FandolSong-Regular.otf
+kpsewhich FandolSong-Bold.otf
+kpsewhich FandolKai-Regular.otf
+
+每条命令应返回对应文件路径；无输出表示该文件尚未进入当前 TeX 搜索路径。
+对返回的字体路径计算 SHA-256 后，与上方记录比较。例如 Linux 可运行 sha256sum "字体文件的绝对路径"；PowerShell 可运行 Get-FileHash -Algorithm SHA256 -LiteralPath "字体文件的绝对路径"。
+这些命令只核对所列文件；全部排版依赖是否齐全，仍以 build.py 实际编译结果为准。
+
 build.py 连续编译三遍，写到 build/谱定理与全等.pdf，随包 PDF 不受影响。
 如需指定引擎，使用 python3 build.py --xelatex /path/to/xelatex。
 也可在根目录直接运行 xelatex -interaction=nonstopmode -halt-on-error 谱定理与全等.tex，重复到引用稳定。
 pdfinfo、pdftotext、pdffonts（Poppler）用于附加检查，不是构建依赖。
 
-随包 PDF 是先前交付的 43 页原件。默认双面排版中，章节从右页开始而出现的留白属于正常分页。
+随包 PDF 是本次由现行源码编译的 43 页答案讲义。默认双面排版中，章节从右页开始而出现的留白属于正常分页。
